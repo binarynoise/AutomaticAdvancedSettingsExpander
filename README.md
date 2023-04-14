@@ -3,6 +3,8 @@ Automatically expands the advanced settings in the Settings app by hooking setIn
 
 Should work on all Android versions where the Settings app uses androidx.preferencess. Please report where it stops working so that I can edit the minSdkVersion.
 
+This is an xposed module [part of the LSPosed Module Repo](https://github.com/Xposed-Modules-Repo/de.binarynoise.automaticadvancedsettingsexpander) or in the LSPsed App.
+
 | before | after |
 |--------|-------|
 |![before](https://user-images.githubusercontent.com/50302352/156211967-6d72f9c2-4185-4e75-8e88-0dc9b282945e.png)|![after](https://user-images.githubusercontent.com/50302352/156211962-ced38048-4970-4fa4-bdb0-51fcba2b4f6a.png)|
