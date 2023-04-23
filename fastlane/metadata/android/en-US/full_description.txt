@@ -1,0 +1,1 @@
+<p><i>Automatic Advanced Settings Expander</i> is an Xposed module that automatically expands the advanced settings in the Settings app by hooking setInitialExpandedChildrenCount in PreferenceGroup. I hate to always expand them myself everytime.</p><p>Should work on all Android versions where the Settings app uses androidx.preferencess.</p>
