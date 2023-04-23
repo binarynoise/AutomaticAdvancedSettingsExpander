@@ -1,5 +1,7 @@
 package de.binarynoise.automaticadvancedsettingsexpander
 
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 import android.util.Log
 import androidx.annotation.Keep
 import de.robv.android.xposed.IXposedHookLoadPackage
@@ -12,18 +14,51 @@ const val TAG = "AutomaticSettingsExpand"
 @Keep
 class Hook : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        XposedHelpers.findAndHookMethod(
-            "androidx.preference.PreferenceGroup",
-            lpparam.classLoader,
-            "setInitialExpandedChildrenCount",
-            Int::class.javaPrimitiveType,
-            object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val expectedCount = param.args[0]
-                    Log.d(TAG, "expandedCount would have been set to $expectedCount, but skipped")
-                    param.result = Unit
-                }
-            },
+        val packages = arrayOf(
+            "androidx.preference",
+            "android.preference",
+            "android.support.v7.preference",
         )
+        
+        val classes = arrayOf("PreferenceGroup")
+        
+        val hook = object : XC_MethodHook() {
+            override fun beforeHookedMethod(param: MethodHookParam) {
+                var expandedCount by param.args(0)
+                Log.d(TAG, "expandedCount would have been set to $expandedCount, but setting to Int.MAX_VALUE instead")
+                expandedCount = Int.MAX_VALUE
+            }
+        }
+        
+        packages.forEach { p ->
+            classes.forEach { c ->
+                try {
+                    XposedHelpers.findAndHookMethod(
+                        "$p.$c",
+                        lpparam.classLoader,
+                        "setInitialExpandedChildrenCount",
+                        Int::class.javaPrimitiveType,
+                        hook,
+                    )
+                    Log.d(TAG, "Hooked $p.$c")
+                } catch (_: Throwable) {
+                }
+            }
+            
+        }
+    }
+    
+    public operator fun <T> Array<T>.invoke(index: Int): ArrayDelegate<T> {
+        return ArrayDelegate(this, index)
+    }
+    
+    public class ArrayDelegate<T>(val array: Array<T>, val index: Int) : ReadWriteProperty<Any?, T> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+            return array[index]
+        }
+        
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+            array[index] = value
+        }
     }
 }
