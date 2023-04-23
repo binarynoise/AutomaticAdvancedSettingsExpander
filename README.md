@@ -9,7 +9,7 @@ Should work on all Android versions where the Settings app uses one of
 
 Please report where it stops working so that I can edit the minSdkVersion or add missing classes.
 
-This is an xposed module [part of the LSPosed Module Repo](https://github.com/Xposed-Modules-Repo/de.binarynoise.automaticadvancedsettingsexpander) or in the LSPsed App.
+This is an Xposed module [part of the LSPosed Module Repo](https://github.com/Xposed-Modules-Repo/de.binarynoise.automaticadvancedsettingsexpander) or in the LSPosed App.
 
 | before | after |
 |--------|-------|
